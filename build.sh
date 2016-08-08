@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-echo "starting"
 echo "building"
+echo "build done"
 
 sleep 1m
+echo "starting"
 
-echo "build done"
 exit 0
