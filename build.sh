@@ -2,7 +2,7 @@
 
 echo "building"
 
-sleep 1m
+sleep 10
 
 echo "build done"
 exit 0
