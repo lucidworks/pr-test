@@ -1,3 +1,3 @@
 
-echo ok
-exit 0
+echo oh no
+exit 1
