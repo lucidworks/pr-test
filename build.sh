@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+echo "starting"
 echo "building"
 
 echo "sleeping"
