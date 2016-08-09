@@ -3,6 +3,6 @@ echo "building"
 echo "build done"
 
 echo "sleeping"
-sleep 1m
+sleep 30
 
 exit 0
