@@ -2,7 +2,7 @@
 echo "building"
 echo "build done"
 
+echo "sleeping"
 sleep 1m
-echo "starting"
 
 exit 0
