@@ -1,6 +1,6 @@
 # The top few are the vars you would normally change before running the playbook.
 # I checked in sensible defaults so as not to kill us with cost.
-ec2_region: "us-west-2"
+ec2_region: "us-east-2"
 #ec2_volume_size: "250"
 ec2_volume_size: "8"
 #ec2_instance_type: "m4.2xlarge"
