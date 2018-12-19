@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+   id "org.sonarqube" version "2.6.2"
+}
+
+sonarqube {
+  properties {
+    property "sonar.abap.file.suffixes", ""
+    property "sonar.host.url", "http://54.201.239.26:9000"
+    property "sonar.login", "f1a9c26a41fbc30b80e2f79bc77c2ce46e7eca6e"
+  }
+  repositories {
+    jcenter()
+    mavenCentral()
+    mavenLocal()
+  }
+  dependencies {
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0' 
+  }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.google.guava:guava:23.0'
+    testCompile 'junit:junit:4.12'
+}
