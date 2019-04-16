@@ -47,7 +47,7 @@ pipeline {
     }
     post {
         always {
-          junit '**/build/**/*.xml'
+          junit 'build/test-results/**/*.xml'
           jacoco(
               execPattern: '**/build/jacoco/test.exec',
               classPattern: '**/build/classes/java/main',
