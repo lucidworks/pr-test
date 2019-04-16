@@ -19,16 +19,49 @@ pipeline {
                 sh """./gradlew test"""
             }
         }
-        stage("Archive") {
+        stage("Merge") {
             steps {
-                archiveArtifacts artifacts: 'build/test-results/**/*.xml', onlyIfSuccessful: false
-                junit 'build/test-results/**/*.xml'
+                sh """echo 'Merge here'"""
+            }
+        }
+        stage('Deploy Artifact') {
+            // Always deploy master - SNAPSHOTs of latest development target
+            // & Deploy all release branches.
+            when {
+                anyOf {
+                    branch 'master'
+                    expression {
+                        return (env.GIT_BRANCH ==~ /releases\/.*/)
+                    }
+                }
+            }
+            steps {
+                sh """echo Deply artifact to artifactory"""
             }
         }
         stage("Cleanup") {
             steps {
                 cleanWs()
             }
+        }
+    }
+    post {
+        always {
+          junit '**/build/**/*.xml'
+          jacoco(
+              execPattern: '**/build/jacoco/test.exec',
+              classPattern: '**/build/classes/java/main',
+              sourcePattern: '**/src/main/java',
+              exclusionPattern: '**/src/test*'
+          )
+        }
+
+        success {
+          archiveArtifacts '**/build/libs/**/*.jar,build/reports/**'
+        }
+
+        failure {
+          sh """echo 'Failure'"""
         }
     }
 }
