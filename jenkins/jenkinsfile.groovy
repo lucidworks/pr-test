@@ -11,12 +11,12 @@ pipeline {
     stages {
         stage("build") {
             steps {
-                sh """./gradlew clean build"""
+                sh """./gradlew clean build -i"""
             }
         }
         stage("unittests") {
             steps {
-                sh """./gradlew test"""
+                sh """./gradlew test -i && ls -l build/test-results/test/*.xml"""
             }
         }
         stage("Merge") {
@@ -57,7 +57,8 @@ pipeline {
         }
 
         success {
-          archiveArtifacts '**/build/libs/**/*.jar,build/reports/**'
+          
+          archiveArtifacts '**/*.jar,build/test-results/**/*.xml,build/reports/*'
         }
 
         failure {
