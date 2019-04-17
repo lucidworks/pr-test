@@ -37,6 +37,12 @@ pipeline {
                                 output = sh( script: "python /pr.py ${repo} ${CHANGE_ID}", returnStdout: true).trim()
                         }}
                         echo "${output}"
+                        if ( "${output}".contains("MERGE!") ) {
+                            echo "Do Merge!"
+                        } else {
+                            echo "Not merging, marking the build UNSTABLE"
+                            currentBuild.result = 'UNSTABLE'
+                        }
                     }
                 }
              }
