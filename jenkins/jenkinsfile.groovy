@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         DEFAULT_SLACK_CHANNEL='testing123_123'
-        GITHUB_CREDENTIAL_ID='github-token-lucid-ci'
+        GITHUB_CREDENTIAL_ID='github-token'
         GIT_ORG='lucidworks'
     }
     stages {
@@ -28,12 +28,13 @@ pipeline {
                 }
                 // Merge will happen in the docker image
                 // Build origin PRs (merged with base branch) this enabled a Jenkins-provided environment variable, $CHANGE_ID that in the case of a pull request, is the pull request number.
-                withCredentials([string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')]) {
+                // string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')
+                withCredentials([$class: 'UsernamePasswordMultiBinding', credentialsId: GITHUB_CREDENTIAL_ID, usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN']) {
                     script {
                         def repo = sh (script: 'basename -s .git `git config --get remote.origin.url`', returnStdout: true).trim()
                         
                         docker.withRegistry('https://qe-docker.ci-artifactory.lucidworks.com', 'ARTIFACTORY_JENKINS'){
-                            docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:latest').inside('--entrypoint "" -v $WORKSPACE:/output'){
+                            docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:041720191128').inside('--entrypoint ""'){
                                 output = sh( script: "python /pr.py ${repo} ${CHANGE_ID}", returnStdout: true).trim()
                         }}
                         echo "${output}"
