@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         DEFAULT_SLACK_CHANNEL='testing123_123'
-        GITHUB_CREDENTIAL_ID='github-token'
+        GITHUB_CREDENTIAL_ID='github-token-lucid-ci'
         GIT_ORG='lucidworks'
     }
     stages {
@@ -28,8 +28,7 @@ pipeline {
                 }
                 // Merge will happen in the docker image
                 // Build origin PRs (merged with base branch) this enabled a Jenkins-provided environment variable, $CHANGE_ID that in the case of a pull request, is the pull request number.
-                // string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')
-                withCredentials([$class: 'UsernamePasswordMultiBinding', credentialsId: GITHUB_CREDENTIAL_ID, usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN']) {
+                withCredentials([string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')]) {
                     script {
                         def repo = sh (script: 'basename -s .git `git config --get remote.origin.url`', returnStdout: true).trim()
                         
@@ -41,8 +40,7 @@ pipeline {
                         if ( "${output}".contains("MERGE!") ) {
                             echo "Do Merge!"
                         } else {
-                            echo "Not merging, marking the build UNSTABLE"
-                            currentBuild.result = 'UNSTABLE'
+                            echo "Not merging"
                         }
                     }
                 }
