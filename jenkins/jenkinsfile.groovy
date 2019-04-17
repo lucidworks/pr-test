@@ -39,8 +39,10 @@ pipeline {
                         echo "${output}"
                         if ( "${output}".contains("MERGE!") ) {
                             echo "Do Merge!"
+                            currentBuild.description = "Merged"
                         } else {
                             echo "Not merging"
+                            currentBuild.description = "Not able to merge"
                         }
                     }
                 }
