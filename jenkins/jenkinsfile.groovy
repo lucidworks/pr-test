@@ -33,15 +33,16 @@ pipeline {
                         def repo = sh (script: 'basename -s .git `git config --get remote.origin.url`', returnStdout: true).trim()
                         
                         docker.withRegistry('https://qe-docker.ci-artifactory.lucidworks.com', 'ARTIFACTORY_JENKINS'){
-                            docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:latest').inside('--entrypoint "" -v $WORKSPACE:/output'){
+                            docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:041720191128').inside('--entrypoint ""'){
                                 output = sh( script: "python /pr.py ${repo} ${CHANGE_ID}", returnStdout: true).trim()
                         }}
                         echo "${output}"
                         if ( "${output}".contains("MERGE!") ) {
                             echo "Do Merge!"
+                            currentBuild.description = "Merged"
                         } else {
-                            echo "Not merging, marking the build UNSTABLE"
-                            currentBuild.result = 'UNSTABLE'
+                            echo "Not merging"
+                            currentBuild.description = "Not able to merge"
                         }
                     }
                 }
