@@ -23,29 +23,38 @@ pipeline {
         }
         stage("Merge") {
             steps {
-                script {
-                   sh """printenv"""
-                }
+                echo "Due to tokens on jenkins not working as expected, this is skipped"
+                // script {
+                //    sh """printenv"""
+                // }
                 // Merge will happen in the docker image
                 // Build origin PRs (merged with base branch) this enabled a Jenkins-provided environment variable, $CHANGE_ID that in the case of a pull request, is the pull request number.
-                withCredentials([string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')]) {
-                    script {
-                        def repo = sh (script: 'basename -s .git `git config --get remote.origin.url`', returnStdout: true).trim()
+                
+//                 // withCredentials([usernamePassword(credentialsId: 'github-lucid-ci2-global', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USERNAME')]) {
+//                 // withCredentials([string(credentialsId: GITHUB_CREDENTIAL_ID, variable: 'GITHUB_TOKEN')]) {
+//                 withCredentials([usernamePassword(credentialsId: 'github-token', passwordVariable: 'GITHUB_TOKEN', usernameVariable: 'GITHUB_USERNAME')]) {
+//                     script {
                         
-                        docker.withRegistry('https://qe-docker.ci-artifactory.lucidworks.com', 'ARTIFACTORY_JENKINS'){
-                            docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:041720191128').inside('--entrypoint ""'){
-                                output = sh( script: "python /pr.py ${repo} ${CHANGE_ID}", returnStdout: true).trim()
-                        }}
-                        echo "${output}"
-                        if ( "${output}".contains("MERGE!") ) {
-                            echo "Do Merge!"
-                            currentBuild.description = "Merged"
-                        } else {
-                            echo "Not merging"
-                            currentBuild.description = "Not able to merge"
-                        }
-                    }
-                }
+//                         def repo = sh (script: 'basename -s .git `git config --get remote.origin.url`', returnStdout: true).trim()
+                        
+//                         docker.withRegistry('https://qe-docker.ci-artifactory.lucidworks.com', 'ARTIFACTORY_JENKINS'){
+//                             docker.image('qe-docker.ci-artifactory.lucidworks.com/git_helper:041720191523').inside('--entrypoint ""'){
+//                                 output = sh( script: "python /pr.py ${repo} ${CHANGE_ID}", returnStdout: true).trim()
+//                         }}
+
+//                         sh """url="https://api.github.com/repos/lucidworks/${repo}/pulls/${CHANGE_ID}"
+// curl -s \$url -H "Accept: application/vnd.github.antiope-preview+json" -H "Authorization: token $GITHUB_TOKEN" | jq .mergeable_state"""
+
+//                         echo "${output}"
+//                         if ( "${output}".contains("MERGE!") ) {
+//                             echo "Do Merge!"
+//                             currentBuild.description = "Merged"
+//                         } else {
+//                             echo "Not merging"
+//                             currentBuild.description = "Not able to merge"
+//                         }
+//                     }
+//                 }
              }
         }
         stage('Deploy Artifact') {
