@@ -9,6 +9,7 @@ pipeline {
         DEFAULT_SLACK_CHANNEL='testing123_123'
         GITHUB_CREDENTIAL_ID='github-token-lucid-ci'
         GIT_ORG='lucidworks'
+        SLACK_CHANNEL='ci-core'
     }
     stages {
         stage("build") {
@@ -75,11 +76,16 @@ pipeline {
     }
     post {
         success {
-            sh """echo 'Success'"""
+            slackSend (color: '#2eb886', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
-
         failure {
-          sh """echo 'Failure'"""
+            slackSend (color: '#a30200', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
+        }
+        unstable {
+            slackSend (color: '#daa038', message: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
+        }
+        aborted {
+            slackSend (color: '#000000', message: "ABORTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
         always {
             archiveArtifacts artifacts:'**/*.jar,build/test-results/**/*.xml,build/reports/*', allowEmptyArchive: true, excludes: '**/gradle-wrapper.jar,**/jacocoagent.jar'
