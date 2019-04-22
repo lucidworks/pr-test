@@ -76,16 +76,16 @@ pipeline {
     }
     post {
         success {
-            slackSend (color: '#2eb886', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: ${env.SLACK_CHANNEL})
+            slackSend (color: '#2eb886', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
         failure {
-            slackSend (color: '#a30200', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: ${env.SLACK_CHANNEL})
+            slackSend (color: '#a30200', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
         unstable {
-            slackSend (color: '#daa038', message: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: ${env.SLACK_CHANNEL})
+            slackSend (color: '#daa038', message: "UNSTABLE: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
         aborted {
-            slackSend (color: '#000000', message: "ABORTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: ${env.SLACK_CHANNEL})
+            slackSend (color: '#000000', message: "ABORTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})", channel: env.SLACK_CHANNEL)
         }
         always {
             archiveArtifacts artifacts:'**/*.jar,build/test-results/**/*.xml,build/reports/*', allowEmptyArchive: true, excludes: '**/gradle-wrapper.jar,**/jacocoagent.jar'
